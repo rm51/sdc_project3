@@ -7,7 +7,7 @@ def resize(data):
 	return ktf.image.resize_images(data, (64, 64))
 
 lines = []
-with open('twolapsaugmented/driving_log.csv') as csvfile:
+with open('fourlaps/driving_log.csv') as csvfile:
 	reader = csv.reader(csvfile)
 	for line in reader:
 		lines.append(line)
@@ -20,7 +20,7 @@ for line in lines:
 	for i in range(3):
 		source_path = line[i]
 		filename = source_path.split('/')[-1]
-		current_path = 'twolapsaugmented/IMG/' + filename
+		current_path = 'fourlaps/IMG/' + filename
 		image = cv2.imread(current_path)
 		measurement = float(line[3])
 		images.append(image)
