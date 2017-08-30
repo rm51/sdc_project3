@@ -7,7 +7,7 @@ def resize(data):
 	return ktf.image.resize_images(data, (64, 64))
 
 lines = []
-with open('aug28/driving_log.csv') as csvfile:
+with open('twolapsaugmented/driving_log.csv') as csvfile:
 	reader = csv.reader(csvfile)
 	for line in reader:
 		lines.append(line)
@@ -20,7 +20,7 @@ for line in lines:
 	for i in range(3):
 		source_path = line[i]
 		filename = source_path.split('/')[-1]
-		current_path = 'aug28/IMG/' + filename
+		current_path = 'twolapsaugmented/IMG/' + filename
 		image = cv2.imread(current_path)
 		measurement = float(line[3])
 		images.append(image)
@@ -34,10 +34,12 @@ for image, measurement in zip(images, measurements):
 	augmented_measurements.append(measurement)
 	flip_prob = np.random.random()
 	# change flip_prob maybe make lower so more images flipped
-	#if flip_prob > 0.5:
+	# 0.3, goes on dirt road and also rides on the lane
+	# 0.5 perofrmed much worse and go stuck coming off the bridge
+	if flip_prob >  .3:
 	#  when flipping only if measurement greater than .3 for turning result is worse
-	augmented_images.append(cv2.flip(image,1))
-	augmented_measurements.append(measurement*-1.0)
+		augmented_images.append(cv2.flip(image,1))
+		augmented_measurements.append(measurement*-1.0)
 
 X_train = np.array(augmented_images)
 y_train = np.array(augmented_measurements)
