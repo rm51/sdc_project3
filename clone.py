@@ -1,30 +1,49 @@
 import csv
 import cv2
 import numpy as np
+from PIL import Image
 
 def resize(data):
 	from keras.backend import tf as ktf
 	return ktf.image.resize_images(data, (64, 64))
 
+def process_image(image):
+	filename = source_path.split('/')[-1]
+	current_path = './fourlapswithdrivingafterbridge/IMG/' + filename
+	image = cv2.imread(current_path)
+	image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+	return image_rgb
+
 lines = []
-with open('fourlaps/driving_log.csv') as csvfile:
+with open('./fourlapswithdrivingafterbridge/driving_log.csv') as csvfile:
 	reader = csv.reader(csvfile)
 	for line in reader:
 		lines.append(line)
+
 
 images = []
 
 
 measurements = []
 for line in lines:
-	for i in range(3):
-		source_path = line[i]
-		filename = source_path.split('/')[-1]
-		current_path = 'fourlaps/IMG/' + filename
-		image = cv2.imread(current_path)
-		measurement = float(line[3])
-		images.append(image)
-		measurements.append(measurement)
+	#print ("line", line)
+	steering_center = float(line[3])
+	correction = 0.25 # this is a parameter to tune
+	steering_left = steering_center + correction
+	steering_right = steering_center - correction
+
+	source_path = line[0]
+	filename = source_path.split('/')[-1]
+	#print ("fileName", filename)
+	current_path = './fourlapswithdrivingafterbridge/IMG/' + filename
+	#image = cv2.imread(current_path)
+	img_center = process_image(line[0])
+	img_left = process_image(line[1])
+	img_right = process_image(line[2])
+	#image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+	
+	images.extend((img_center, img_left, img_right))
+	measurements.extend((steering_center, steering_left, steering_right))
 
 #images = resize(images)
 
@@ -36,8 +55,10 @@ for image, measurement in zip(images, measurements):
 	# change flip_prob maybe make lower so more images flipped
 	# 0.3, goes on dirt road and also rides on the lane
 	# 0.5 perofrmed much worse and go stuck coming off the bridge
-	if flip_prob >  .3:
+	if flip_prob >  .3 or abs(measurement) < 0.05:
+		pass
 	#  when flipping only if measurement greater than .3 for turning result is worse
+	else:
 		augmented_images.append(cv2.flip(image,1))
 		augmented_measurements.append(measurement*-1.0)
 
@@ -72,7 +93,7 @@ model.add(Dense(1))
 
 model.compile(loss='mse', optimizer='adam')
 #model.fit(X_train, y_train, validation_split=0.2, shuffle=True, epochs=7)
-history_object = model.fit(X_train, y_train, validation_split=0.2, shuffle=True, epochs=5, verbose=2)
+history_object = model.fit(X_train, y_train, validation_split=0.2, shuffle=True, epochs=3, verbose=2)
 print (history_object.history.keys())
 plt.plot(history_object.history['loss'])
 plt.plot(history_object.history['val_loss'])
@@ -83,4 +104,3 @@ plt.legend(['training set', 'validation set'], loc='upper right')
 plt.show()
 model.save('model.h5')
 exit(0)
-
