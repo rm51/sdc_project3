@@ -9,13 +9,13 @@ def resize(data):
 
 def process_image(image):
 	filename = source_path.split('/')[-1]
-	current_path = './fourlapswithdrivingafterbridge/IMG/' + filename
+	current_path = './aug31/IMG/' + filename
 	image = cv2.imread(current_path)
 	image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 	return image_rgb
 
 lines = []
-with open('./fourlapswithdrivingafterbridge/driving_log.csv') as csvfile:
+with open('./aug31/driving_log.csv') as csvfile:
 	reader = csv.reader(csvfile)
 	for line in reader:
 		lines.append(line)
@@ -28,14 +28,14 @@ measurements = []
 for line in lines:
 	#print ("line", line)
 	steering_center = float(line[3])
-	correction = 0.25 # this is a parameter to tune
+	correction = 0.15 # this is a parameter to tune
 	steering_left = steering_center + correction
 	steering_right = steering_center - correction
 
 	source_path = line[0]
 	filename = source_path.split('/')[-1]
 	#print ("fileName", filename)
-	current_path = './fourlapswithdrivingafterbridge/IMG/' + filename
+	current_path = './aug31/IMG/' + filename
 	#image = cv2.imread(current_path)
 	img_center = process_image(line[0])
 	img_left = process_image(line[1])
@@ -81,9 +81,10 @@ model.add(Cropping2D(cropping=((50,20),(0,0))))
 model.add(Lambda(resize))
 model.add(Convolution2D(24,(5,5), strides=(2,2),activation="relu"))
 model.add(Convolution2D(36,(5,5),strides=(2,2),activation="relu"))
-#model.add(Dropout(0.5))
+model.add(Dropout(0.7))
 model.add(Convolution2D(48,(5,5),strides=(2,2),activation="relu"))
 model.add(Convolution2D(64,(3,3),activation="relu"))
+model.add(Dropout(0.7))
 model.add(Convolution2D(64,(3,3),activation="relu"))
 model.add(Flatten())
 model.add(Dense(100))
@@ -93,7 +94,7 @@ model.add(Dense(1))
 
 model.compile(loss='mse', optimizer='adam')
 #model.fit(X_train, y_train, validation_split=0.2, shuffle=True, epochs=7)
-history_object = model.fit(X_train, y_train, validation_split=0.2, shuffle=True, epochs=3, verbose=2)
+history_object = model.fit(X_train, y_train, validation_split=0.2, shuffle=True, epochs=10, verbose=2)
 print (history_object.history.keys())
 plt.plot(history_object.history['loss'])
 plt.plot(history_object.history['val_loss'])
