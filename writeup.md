@@ -24,7 +24,6 @@ The goals / steps of this project are the following:
 [image7]: ./examples/placeholder_small.png "Flipped Image"
 
 ## Rubric Points
-###Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/432/view) individually and describe how I addressed each point in my implementation.  
 
 ---
 ###Files Submitted & Code Quality
@@ -107,17 +106,21 @@ I didn't train on track two because I found it difficult to stay in the lane. I 
 
 ####2. Final Model Architecture
 
-The final model architecture (model.py lines 18-24) consisted of a convolution neural network with the following layers and layer sizes ...
+The final architecture consisted of:
 
-Here is a visualization of the architecture (note: visualizing the architecture is optional according to the project rubric)
+Two convolutional layers with 2x2 filters  (model.py line 70-71) followed by a dropout layer then two more convoluational layers (model.py lines 74-75) - one with a 2x2 filter and another dropout layer. Then another convolution layer.
 
+Then four fully connected layers. 
 
+It initially had an input shape of 160x320x3 which I reized to 64x64 in model.py lines 6-8.
 
 ####3. Creation of the Training Set & Training Process
 
 To capture good driving behavior, I first recorded two laps on track one using center lane driving. Here is an example image of center lane driving:
 
 ![sample center image](https://github.com/rm51/sdc_project3/blob/master/center_2017_08_31_22_49_07_970.jpg)
+
+I also cropped 50 pixels from the top and 20 pixels from the bottom to cut out the scenery as well as the dashboard. I tried out different values and found that gave me the best results. 
 
 
 To augment the data sat, I also flipped images and angles thinking that this would give me more data while also having the benefit on not having the model memorize the track.
@@ -128,6 +131,6 @@ After the collection process, I had X number of data points. I then preprocessed
 
 I finally randomly shuffled the data set and put 20% of the data into a validation set. 
 
-I used this training data for training the model. The validation set helped determine if the model was over or under fitting. The ideal number of epochs was 10. I plotted the mse vs loss and saw that at five loss was still decreasing. Also I looked at other graphs as to when to increase the number of epochs and saw that mine was the case where I should use more epochs. I used an adam optimizer so that manually training the learning rate wasn't necessary.
+The validation set helped determine if the model was over or under fitting. The ideal number of epochs was 10. I plotted the mse vs loss and saw that at five loss was still decreasing. Also I looked at other graphs as to when to increase the number of epochs and saw that mine was the case where I should use more epochs. I used an adam optimizer so that manually training the learning rate wasn't necessary.
 
 I was planning to use a generator if I ran out of memory but I didn't need to as I didn't run out of memory and one epoch took less than a minute.
