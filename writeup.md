@@ -59,9 +59,9 @@ I also tried with an ELU layer but found that the model performed worse with ELU
 
 ####2. Attempts to reduce overfitting in the model
 
-The model contains dropout layers in order to reduce overfitting.
+I added two dropout layers and found that the model performed the best with those two layers.
 
-The model was trained and validated on different data sets to ensure that the model was not overfitting. The model was tested by running it through the simulator and ensuring that the vehicle could stay on the track.
+The model was trained and validated on different data sets to ensure that the model was not overfitting. The model was tested by running it through the simulator and watching that it would keep running on the track without crashing or hitting any barriers or going off the track until I stopped the simulator. 
 
 ####3. Model parameter tuning
 
@@ -84,6 +84,8 @@ For details about how I created the training data, see the next section.
 
 I first used a convolutional neural network similar to the LeNet model and then later in the lessons learned about the Nvidia model so I switched to that.
 
+The Nvidia model was pretty good without any finetuning because it got the car to the bridge. But then after the bridge it would go on the dirt path.
+
 I orignally used just the center camera but wasn't able to complete an entire lap so I switched to adding a parameter for the left and right camera angle. 
 
 I also resized the images to make the model quicker to train so that I could more easily tune the parameters since I was training on my laptop without a gpu. 
@@ -94,7 +96,7 @@ At first I wasn't using dropout but I found that I had a low mean squared error 
 
 So I added dropout first at a rate of 0.5 and saw that the model performed worse so I tried a rate of 0.3 and the model did worse so I changed it to 0.7 and then the model did better and made it over the bridge but crashed into the barrier. 
 
-I then decided to add an additional Dropout layer  and again experimented the values to find the best one and again found that 0.7 was the best choice. I also moved the Dropout to inb etween various layers to see where the best results were and left the Dropout where it performed the best. And the car was able to make it consistently around the track and would continue going around until I stopped the simulator. 
+I then decided to add an additional Dropout layer  and again experimented with the values to find the best one and again found that 0.7 was the best choice. I also moved the Dropout to inb etween various layers to see where the best results were and left the Dropout where it performed the best. And the car was able to make it consistently around the track and would continue going around until I stopped the simulator. 
 
 I originally tried five epochs but saw that the loss was still decreasing so I increased it to ten to see if that would give a better model and I did so I kept it there. I had also tried two 
 and three epochs but the model was worse with that.
@@ -102,14 +104,6 @@ and three epochs but the model was worse with that.
 To augment the data set I flipped the images so that I would have more data. I also filtered 70% of the images that were almost straight to combat the tendency to drive straight.
 
 I didn't train on track two because I found it difficult to stay in the lane. I plan to train on that track and also add brightness to my images to further improve my model because currently my model goes to the left pretty quickly on track 2. 
-
-
-
-I first trained using three laps and ran my model with no dropout 
-
-My first step was to use a convolution neural network model similar to the ... I thought this model might be appropriate because ...
-
-
 
 ####2. Final Model Architecture
 
@@ -125,24 +119,13 @@ To capture good driving behavior, I first recorded two laps on track one using c
 
 ![alt text][image2]
 
-I then recorded the vehicle recovering from the left side and right sides of the road back to center so that the vehicle would learn to .... These images show what a recovery looks like starting from ... :
 
-![alt text][image3]
-![alt text][image4]
-![alt text][image5]
+To augment the data sat, I also flipped images and angles thinking that this would give me more data while also having the benefit on not having the model memorize the track.
 
-Then I repeated this process on track two in order to get more data points.
-
-To augment the data sat, I also flipped images and angles thinking that this would ... For example, here is an image that has then been flipped:
-
-![alt text][image6]
-![alt text][image7]
-
-Etc ....
 
 After the collection process, I had X number of data points. I then preprocessed this data by ...
 
 
-I finally randomly shuffled the data set and put Y% of the data into a validation set. 
+I finally randomly shuffled the data set and put 20% of the data into a validation set. 
 
-I used this training data for training the model. The validation set helped determine if the model was over or under fitting. The ideal number of epochs was Z as evidenced by ... I used an adam optimizer so that manually training the learning rate wasn't necessary.
+I used this training data for training the model. The validation set helped determine if the model was over or under fitting. The ideal number of epochs was 10. I plotted the mse vs loss and saw that at five loss was still decreasing. Also I looked at other graphs as to when to increase the number of epochs and saw that mine was the case where I should use more epochos. I used an adam optimizer so that manually training the learning rate wasn't necessary.
