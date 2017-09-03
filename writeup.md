@@ -111,13 +111,13 @@ The final model architecture (model.py lines 18-24) consisted of a convolution n
 
 Here is a visualization of the architecture (note: visualizing the architecture is optional according to the project rubric)
 
-![alt text][image1]
+
 
 ####3. Creation of the Training Set & Training Process
 
 To capture good driving behavior, I first recorded two laps on track one using center lane driving. Here is an example image of center lane driving:
 
-![alt text][image2]
+![alt text][center_2017_08_31_22_49_07_970.jpg]
 
 
 To augment the data sat, I also flipped images and angles thinking that this would give me more data while also having the benefit on not having the model memorize the track.
@@ -128,4 +128,6 @@ After the collection process, I had X number of data points. I then preprocessed
 
 I finally randomly shuffled the data set and put 20% of the data into a validation set. 
 
-I used this training data for training the model. The validation set helped determine if the model was over or under fitting. The ideal number of epochs was 10. I plotted the mse vs loss and saw that at five loss was still decreasing. Also I looked at other graphs as to when to increase the number of epochs and saw that mine was the case where I should use more epochos. I used an adam optimizer so that manually training the learning rate wasn't necessary.
+I used this training data for training the model. The validation set helped determine if the model was over or under fitting. The ideal number of epochs was 10. I plotted the mse vs loss and saw that at five loss was still decreasing. Also I looked at other graphs as to when to increase the number of epochs and saw that mine was the case where I should use more epochs. I used an adam optimizer so that manually training the learning rate wasn't necessary.
+
+I was planning to use a generator if I ran out of memory but I didn't need to as I didn't run out of memory and one epoch took less than a minute.
