@@ -117,7 +117,7 @@ Here is a visualization of the architecture (note: visualizing the architecture 
 
 To capture good driving behavior, I first recorded two laps on track one using center lane driving. Here is an example image of center lane driving:
 
-![alt text][center_2017_08_31_22_49_07_970.jpg]
+![sample center image][https://github.com/rm51/sdc_project3/blob/master/center_2017_08_31_22_49_07_970.jpg]
 
 
 To augment the data sat, I also flipped images and angles thinking that this would give me more data while also having the benefit on not having the model memorize the track.
